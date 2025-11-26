@@ -20,7 +20,24 @@ builder.Services.AddHttpClient("CachedClient")
 builder.Services
   .Configure<WorkshopClientSettings>(builder.Configuration.GetSection(WorkshopClientSettings.SectionName));
 
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowAllPolicy",
+      builder =>
+      {
+        builder
+          .AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader();
+      });
+});
+
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+  app.UseCors("AllowAllPolicy");
+}
 
 app.UseDefaultExceptionHandler()
     .UseFastEndpoints(c =>
