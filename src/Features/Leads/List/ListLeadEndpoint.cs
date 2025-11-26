@@ -31,7 +31,8 @@ public class ListLeadEndpoint(LeadRepository repository)
     }
 
     var response = leads
-      .OrderByDescending(l => l.StartAt)
+      .OrderBy(l => l.StartAt.Date)
+      .ThenBy(l => l.StartAt.Hour)
       .Select(l => new ListLeadResponse(
         l.Id,
         l.WorkshopId,
